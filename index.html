@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MusicTourTracker</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+
+	<form id="artist-form">
+
+		<label for="artist-input">Choose Your Artist</label>
+		<input type="text" id="artist-input">
+		<br>
+		<input id="select-artist" type="submit" value="GO!">
+	</form>
+
+	<div id="artist-div"></div>
+
+</body>
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+  <script type="text/javascript">
+
+  	function searchBandsInTown(artist) {
+
+  		//Querying the bandsintown api for the selected artist
+  		var queryURL = "https://rest.bandsintown.com/artists/" + artist + "?app_id=codingbootcamp";
+  		$.ajax({
+  			url: queryURL,
+  			method: "GET"
+  		}).done(function(response) {
+
+  			// Printing the entire object to the console
+  			console.log(response);
+
+  			// Constructing HTML containing the artist info
+  			var artistName = $("<h1>").text(response.name);
+  			var artistURL = $("<a>").attr("href", response.url).append(artistName);
+  			var artistImage = $("<img>").attr("src", response.thumb_url);
+  			var trackerCount = $("<h2>").text(response.tracker_count + " fans tracking this artist");
+  			var upcomingEvents = $("<h2>").text(response.upcoming_event_count + " upcoming events");
+  			var goToArtist = $("<a>").attr("href",response.url).text("See Tour Dates");
+
+  			// Empty the contents of the artist-div, append the new artist content
+  			$("#artist-div").empty();
+  			$("#artist-div").append(artistURL, artistImage, trackerCount, upcomingEvents, goToArtist);
+  		});
+  	}
+
+
+
+
+  	// Event handlet got over clicking the select.artist button
+  	$("#select-artist").on("click",function(event) {
+
+event.preventDefault();
+
+var artist = $("#artist-input").val().trim();
+
+searchBandsInTown(artist);
+
+})
+  </script>
+
+</html>
